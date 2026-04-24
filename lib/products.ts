@@ -19,10 +19,13 @@ export interface Product {
   name: string
   shortDescription: string
   longDescription: string
-  icon: string        // emoji fallback
-  image: string       // path to logo image
-  color: string       // accent color for card glow
+  icon: string
+  image: string
+  screenshot: string
+  mobileScreenshot?: string
+  color: string
   hasDownload: boolean
+  downloadFileId?: 'av-exe' | 'vpn-exe' | 'vpn-apk' // maps to backend download API
   features: BentoFeature[]
   requestEndpoints: string[]
 }
@@ -36,8 +39,10 @@ export const PRODUCTS: Product[] = [
       'Gasha Antivirus gives you powerful protection against viruses, malware, ransomware, and online threats — all while staying light on your system. With a smart scanning engine and real-time monitoring, Gasha works quietly in the background so you can browse, work, and play without worry.',
     icon: '🛡️',
     image: '/av.png',
+    screenshot: '/mokes/av.png',
     color: '#1da09c',
     hasDownload: true,
+    downloadFileId: 'av-exe',
     features: [
       { title: 'Real-Time Scanning', description: 'Continuously monitors files and processes for threats.', icon: '🔍', size: 'lg' },
       { title: 'Ransomware Shield', description: 'Blocks ransomware before it can encrypt your files.', icon: '🔒', size: 'md' },
@@ -59,7 +64,8 @@ export const PRODUCTS: Product[] = [
       'Gasha WAF provides enterprise-grade protection for web applications against SQL injection, XSS, CSRF, and other OWASP Top 10 threats. Deploy in front of any web service for instant protection.',
     icon: '🌐',
     image: '/waf.png',
-    color: '#3ed8ec',
+    screenshot: '/mokes/waf.png',
+    color: '#0d7e8dff',
     hasDownload: false,
     features: [
       { title: 'OWASP Top 10 Protection', description: 'Blocks all major web application vulnerabilities.', icon: '🛡️', size: 'lg' },
@@ -81,8 +87,11 @@ export const PRODUCTS: Product[] = [
       'Gasha VPN provides military-grade encrypted tunnels for secure remote access to government and enterprise networks. Supports both site-to-site and client-to-site configurations.',
     icon: '🔐',
     image: '/vpn.png',
+    screenshot: '/mokes/vpn.png',
+    mobileScreenshot: '/mokes/vpnmobile.png',
     color: '#0891b2',
-    hasDownload: false,
+    hasDownload: true,
+    downloadFileId: 'vpn-exe',
     features: [
       { title: 'AES-256 Encryption', description: 'Military-grade encryption for all traffic.', icon: '🔑', size: 'lg' },
       { title: 'Zero-Trust Access', description: 'Verify every user and device before granting access.', icon: '✅', size: 'md' },
@@ -103,6 +112,7 @@ export const PRODUCTS: Product[] = [
       'Nisir is a comprehensive network security monitoring platform that detects intrusions, analyzes threats, and coordinates incident response across your entire infrastructure.',
     icon: '📡',
     image: '/images/Nisir.png',
+    screenshot: '/mokes/seim.png',
     color: '#059669',
     hasDownload: false,
     features: [
@@ -125,6 +135,7 @@ export const PRODUCTS: Product[] = [
       'Enyuma IAM provides centralized identity management, single sign-on, and fine-grained access control for government and enterprise systems. Supports LDAP, SAML, and OAuth2.',
     icon: '👤',
     image: '/images/IAM.png',
+    screenshot: '/mokes/iam.png',
     color: '#d97706',
     hasDownload: false,
     features: [
@@ -147,6 +158,7 @@ export const PRODUCTS: Product[] = [
       'ABIS (Automated Biometric Identification System) automates the identification of individuals based on their unique biological characteristics including Fingerprint, Face, and Iris recognition.',
     icon: '🫆',
     image: '/abis.png',
+    screenshot: '/mokes/biometrics.png',
     color: '#db2777',
     hasDownload: false,
     features: [
@@ -170,6 +182,7 @@ export const PRODUCTS: Product[] = [
       'Code Protection provides advanced obfuscation, anti-debugging, and anti-tampering mechanisms to protect your critical software from reverse engineering and unauthorized modification.',
     icon: '💻',
     image: '/images/codeprotection.png',
+    screenshot: '/mokes/codepro.png',
     color: '#ea580c',
     hasDownload: false,
     features: [

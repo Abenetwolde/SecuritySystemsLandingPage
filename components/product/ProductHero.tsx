@@ -106,7 +106,8 @@ export function ProductHero({ product }: ProductHeroProps) {
       <PasswordModal
         open={passwordOpen}
         onClose={() => setPasswordOpen(false)}
-        fileName="Gasha Antivirus-2.0.5 Installer.exe"
+        fileName={product.slug === 'gasha-vpn' ? 'Gasha-VPN-Setup.exe' : 'Gasha-Antivirus-Setup.exe'}
+        fileId={product.downloadFileId ?? 'av-exe'}
       />
     </section>
   )

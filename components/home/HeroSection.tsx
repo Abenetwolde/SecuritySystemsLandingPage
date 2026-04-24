@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PRODUCTS } from '@/lib/products'
@@ -12,10 +12,12 @@ const RING_RADIUS = 210
 
 // Logos shown in the "Trusted by" marquee
 const TRUSTED_LOGOS = [
-  { src: '/niss.png',               alt: 'Gasha AV' },
-  { src: '/pmo.png',              alt: 'Gasha WAF' },
-  { src: '/enter.png',              alt: 'Gasha VPN' },
-  { src: '/trade.png',     alt: 'Nisir' },
+
+  { src: '/niss.png', alt: 'National Intelligence and Security Service' },
+  { src: '/pmo.png', alt: 'Office of the Prime Minister' },
+  { src: '/enter.png', alt: 'Ethiopian Enterprise Development' },
+  { src: '/trade.png', alt: 'Ministry of Trade and Regional Integration' },
+
   // { src: '/images/IAM.png',       alt: 'Enyuma IAM' },
   // { src: '/abis.png',             alt: 'ABIS' },
   // { src: '/images/codeprotection.png', alt: 'Code Protection' },
@@ -27,68 +29,8 @@ function polarToXY(angleDeg: number, radius: number) {
 }
 
 export function HeroSection() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [pulse, setPulse] = useState(false)
-
-  // Particle mesh
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    let animId: number
-    const particles: { x: number; y: number; vx: number; vy: number; color: string }[] = []
-
-    const resize = () => {
-      canvas.width = canvas.offsetWidth
-      canvas.height = canvas.offsetHeight
-    }
-    resize()
-    window.addEventListener('resize', resize)
-
-    for (let i = 0; i < 70; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        color: Math.random() > 0.6 ? 'rgba(0,128,128,' : 'rgba(0,102,102,',
-      })
-    }
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      for (const p of particles) {
-        p.x += p.vx; p.y += p.vy
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2)
-        ctx.fillStyle = p.color + '0.5)'
-        ctx.fill()
-      }
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x
-          const dy = particles[i].y - particles[j].y
-          const dist = Math.sqrt(dx * dx + dy * dy)
-          if (dist < 110) {
-            ctx.beginPath()
-            ctx.moveTo(particles[i].x, particles[i].y)
-            ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.strokeStyle = `rgba(0,102,102,${0.12 * (1 - dist / 110)})`
-            ctx.lineWidth = 0.6
-            ctx.stroke()
-          }
-        }
-      }
-      animId = requestAnimationFrame(draw)
-    }
-    draw()
-    return () => { cancelAnimationFrame(animId); window.removeEventListener('resize', resize) }
-  }, [])
 
   // Focus cycle
   useEffect(() => {
@@ -102,13 +44,12 @@ export function HeroSection() {
 
   return (
     <section className="hero-gradient relative flex min-h-screen items-center overflow-hidden" aria-label="Hero section">
-      {/* Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" aria-hidden="true" />
-
       {/* Ambient glows */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div className="hero-glow-tl absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full blur-[120px]" />
-        <div className="hero-glow-br absolute -bottom-32 -right-32 h-[500px] w-[500px] rounded-full blur-[120px]" />
+        <div className="hero-glow-tl absolute -left-24 -top-24 h-[600px] w-[600px] rounded-full blur-[100px]" />
+        <div className="hero-glow-br absolute -bottom-24 -right-24 h-[500px] w-[500px] rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[400px] w-[400px] rounded-full blur-[120px]"
+          style={{ background: 'rgba(0,102,102,0.06)' }} />
       </div>
 
       {/* Fade to page bg at bottom */}
@@ -175,30 +116,34 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.85, duration: 0.5 }}
-              className="flex flex-wrap items-center gap-3 mb-10"
+              className="flex flex-wrap items-center gap-4 mb-10"
             >
+              {/* Primary CTA — clean, no glow effects */}
               <a
                 href="#gasha-av"
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold transition-all hover:scale-105 hover:shadow-lg"
+                className="group inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-bold transition-all duration-300 hover:scale-105"
                 style={{
-                  background: 'linear-gradient(135deg, #006666, #008080)',
+                  background: 'linear-gradient(135deg, #006666 0%, #008080 100%)',
                   color: '#ffffff',
-                  boxShadow: '0 4px 20px rgba(0,102,102,0.35)',
+                  boxShadow: '0 4px 14px rgba(0,102,102,0.35)',
+                  letterSpacing: '0.01em',
                 }}
               >
                 <span>Explore Security Solutions</span>
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                <svg className="h-4 w-4 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </a>
-        
+
+          
+
             </motion.div>
 
             {/* ── Trusted by — left column only ── */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1, duration: 0.5 }}
+              transition={{ delay: 1.1, duration: 0.1 }}
             >
               <p className="mb-4 text-xs font-bold uppercase tracking-widest text-[var(--text-muted)]">
                 Trusted by National Institutions

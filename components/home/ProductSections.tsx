@@ -103,62 +103,204 @@ function ProductDescCard({ product }: { product: Product }) {
   )
 }
 
-// ── Image frame with background blobs ───────────────────────────
+// ── Desktop monitor mockup ───────────────────────────────────────
 function ProductImageFrame({ product }: { product: Product }) {
   return (
-    <div className="relative w-full max-w-lg mx-auto">
-      {/* Blob 1 — large organic shape */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: '80%', height: '80%',
-          top: '0%', left: '5%',
-          borderRadius: '60% 40% 55% 45% / 45% 55% 40% 60%',
-          background: `${product.color}55`,
-          filter: 'blur(1px)',
-          zIndex: 0,
-        }}
-        aria-hidden="true"
-      />
-      {/* Blob 2 — smaller accent */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: '60%', height: '60%',
-          bottom: '0%', right: '0%',
-          borderRadius: '40% 60% 45% 55% / 55% 45% 60% 40%',
-          background: `${product.color}40`,
-          filter: 'blur(2px)',
-          zIndex: 0,
-        }}
-        aria-hidden="true"
-      />
-      {/* Radial glow behind everything */}
-      <div
-        className="absolute -inset-4 rounded-3xl blur-2xl opacity-40 pointer-events-none"
-        style={{ background: `radial-gradient(ellipse at center, ${product.color}88, transparent 65%)` }}
-        aria-hidden="true"
-      />
+    <div className="relative w-full max-w-xl mx-auto select-none" style={{ paddingBottom: '16px' }}>
 
-      {/* Floating image */}
+      {/* ── Background blobs ── */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', width: '75%', height: '55%',
+        top: '5%', left: '12%',
+        borderRadius: '62% 38% 46% 54% / 58% 44% 56% 42%',
+        background: product.color, opacity: 0.45, zIndex: 0, pointerEvents: 'none',
+      }} />
+      <div aria-hidden="true" style={{
+        position: 'absolute', width: '42%', height: '38%',
+        bottom: '8%', right: '10%',
+        borderRadius: '38% 62% 54% 46% / 44% 58% 42% 56%',
+        background: product.color, opacity: 0.28, zIndex: 0, pointerEvents: 'none',
+      }} />
+      <div aria-hidden="true" style={{
+        position: 'absolute', inset: 0,
+        background: `radial-gradient(ellipse at 50% 48%, ${product.color}66, transparent 65%)`,
+        filter: 'blur(20px)', opacity: 0.65, zIndex: 0, pointerEvents: 'none',
+      }} />
+
       <motion.div
-        animate={{ y: [0, -10, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-        className="relative z-10"
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
+        style={{ position: 'relative', zIndex: 10 }}
       >
-        <Image
-          src="/images/pcmoke.png"
-          alt={`${product.name} preview`}
-          width={600}
-          height={420}
-          className="w-full h-auto object-contain"
-          style={{ filter: `drop-shadow(0 24px 48px ${product.color}30)` }}
-          priority={false}
-        />
+        {/* ── Monitor panel ── */}
+        <div style={{
+          borderRadius: '10px 10px 3px 3px',
+          background: 'linear-gradient(160deg, #888 0%, #666 12%, #484848 30%, #303030 60%, #1e1e1e 100%)',
+          padding: '2px 2px 4px 2px',
+          boxShadow: [
+            'inset 0 1.5px 0 rgba(255,255,255,0.28)',
+            'inset 1px 0 0 rgba(255,255,255,0.1)',
+            'inset -1px 0 0 rgba(255,255,255,0.04)',
+            'inset 0 -1px 0 rgba(0,0,0,0.4)',
+            '0 8px 14px -4px rgba(0,0,0,0.4)',
+          ].join(', '),
+        }}>
+          {/* Top-left shine streak on monitor frame */}
+          <div style={{
+            position: 'absolute', inset: 0, borderRadius: '10px 10px 3px 3px',
+            pointerEvents: 'none', zIndex: 1,
+            background: 'linear-gradient(125deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.04) 25%, transparent 50%)',
+          }} />
+          {/* Subtle horizontal shine band across the middle of the frame */}
+          <div style={{
+            position: 'absolute', left: 0, right: 0, top: '30%', height: '20%',
+            pointerEvents: 'none', zIndex: 1,
+            background: 'linear-gradient(180deg, transparent, rgba(255,255,255,0.04), transparent)',
+          }} />
+          {/* Right-edge shadow removed */}
+
+          {/* Black bezel */}
+          <div style={{
+            borderRadius: '9px 9px 2px 2px', background: '#0a0a0a',
+            padding: '6px 6px 3px 6px', position: 'relative', zIndex: 2,
+          }}>
+            {/* Webcam */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '6px' }}>
+              <div style={{
+                width: '6px', height: '6px', borderRadius: '50%',
+                background: 'radial-gradient(circle at 35% 35%, #2a2a2a, #060606)',
+                boxShadow: '0 0 0 1.5px #000, 0 0 0 2.5px #1a1a1a',
+              }} />
+            </div>
+
+            {/* Screen — 16:9, fills edge to edge */}
+            <div style={{
+              position: 'relative', width: '100%', paddingBottom: '56.25%',
+              borderRadius: '3px', overflow: 'hidden', background: '#040810',
+            }}>
+              <Image
+                src={product.screenshot}
+                alt={`${product.name} interface`}
+                fill
+                className="object-cover"
+                style={{ objectPosition: 'top left', objectFit: 'cover', zIndex: 1 }}
+                priority={false}
+              />
+              {/* Glare — top-left only, no bottom shadow on screen */}
+              <div style={{
+                position: 'absolute', inset: 0, zIndex: 4, pointerEvents: 'none',
+                background: 'linear-gradient(118deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 22%, transparent 45%)',
+              }} />
+              {/* Bottom vignette — bottom only */}
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: '18%',
+                zIndex: 4, pointerEvents: 'none',
+                background: 'linear-gradient(to top, rgba(0,0,0,0.22), transparent)',
+              }} />
+            </div>
+
+            {/* Bottom bezel — no INSA here */}
+            <div style={{ height: '10px' }} />
+          </div>
+        </div>
+
+        {/* ── Neck / stand arm ── */}
+        <div style={{
+          margin: '0 auto', width: '8%', height: '30px',
+          background: 'linear-gradient(180deg, #555 0%, #3a3a3a 40%, #2a2a2a 100%)',
+          boxShadow: 'inset 1px 0 0 rgba(255,255,255,0.12), inset -1px 0 0 rgba(0,0,0,0.35)',
+        }} />
+
+        {/* ── Base — with INSA shimmer centered ── */}
+        <div style={{
+          position: 'relative',
+          margin: '0 auto', width: '50%', height: '14px',
+          borderRadius: '0 0 60px 60px',
+          background: 'linear-gradient(180deg, #606060 0%, #484848 25%, #333 60%, #1e1e1e 100%)',
+          boxShadow: [
+            'inset 0 1px 0 rgba(255,255,255,0.18)',
+            'inset 0 -1px 0 rgba(0,0,0,0.4)',
+            '0 6px 12px -2px rgba(0,0,0,0.4)',
+          ].join(', '),
+          overflow: 'hidden',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          {/* Base sheen */}
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.08) 60%, transparent 100%)',
+          }} />
+          {/* INSA — static metallic gradient text with reflection */}
+          <span style={{
+            position: 'relative', zIndex: 2,
+            fontSize: '8px', fontWeight: 800, letterSpacing: '0.4em',
+            fontFamily: 'system-ui, sans-serif', textTransform: 'uppercase',
+            background: 'linear-gradient(180deg, rgba(119, 113, 113, 0.9) 0%, rgba(88, 82, 82, 0.55) 40%, rgba(255,255,255,0.75) 60%, rgba(255,255,255,0.3) 100%)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.5))',
+          }}>
+            INSA
+          </span>
+        </div>
+
+        {/* ── Ground shadow ── */}
+        <div style={{
+          margin: '4px auto 0', width: '55%', height: '8px', borderRadius: '50%',
+          background: 'radial-gradient(ellipse, rgba(0,0,0,0.5) 0%, transparent 70%)',
+          filter: 'blur(5px)',
+        }} />
+
+        {/* ── Phone overlay for VPN — bigger ── */}
+        {product.slug === 'gasha-vpn' && (
+          <div style={{
+            position: 'absolute', bottom: '-24px', right: '1%', zIndex: 20, width: '120px',
+          }}>
+            <div style={{
+              borderRadius: '20px',
+              background: 'linear-gradient(160deg, #707070 0%, #4a4a4a 30%, #2a2a2a 100%)',
+              padding: '4px',
+              boxShadow: [
+                'inset 0 2px 0 rgba(255,255,255,0.22)',
+                'inset 1px 0 0 rgba(255,255,255,0.1)',
+                /* Bottom-only shadow */
+                '0 10px 16px -4px rgba(0,0,0,0.5)',
+              ].join(', '),
+            }}>
+              {/* Speaker */}
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '5px 0 3px' }}>
+                <div style={{ width: '32px', height: '4px', borderRadius: '2px', background: '#111', boxShadow: 'inset 0 1px 0 rgba(0,0,0,0.5)' }} />
+              </div>
+              {/* Screen */}
+              <div style={{
+                position: 'relative', borderRadius: '12px', overflow: 'hidden',
+                aspectRatio: '9/16', background: '#060a12',
+              }}>
+                <Image
+                  src={product.mobileScreenshot ?? product.screenshot}
+                  alt="VPN mobile"
+                  fill
+                  className="object-cover"
+                  style={{ objectPosition: 'top left', objectFit: 'cover' }}
+                />
+                {/* Glare top-left only */}
+                <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 35%)' }} />
+                {/* Bottom shadow only */}
+                <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '20%', pointerEvents: 'none', background: 'linear-gradient(to top, rgba(0,0,0,0.25), transparent)' }} />
+              </div>
+              {/* Home bar */}
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '5px 0 4px' }}>
+                <div style={{ width: '36px', height: '4px', borderRadius: '2px', background: 'rgba(255,255,255,0.22)' }} />
+              </div>
+            </div>
+            {/* Phone shadow */}
+            <div style={{ margin: '4px auto 0', width: '70%', height: '10px', borderRadius: '50%', background: 'radial-gradient(ellipse, rgba(0,0,0,0.55) 0%, transparent 70%)', filter: 'blur(5px)' }} />
+          </div>
+        )}
       </motion.div>
     </div>
   )
 }
+
 
 // ── Single product section ───────────────────────────────────────
 function ProductSection({ product, index }: { product: Product; index: number }) {

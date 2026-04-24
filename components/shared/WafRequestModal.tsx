@@ -59,7 +59,12 @@ function Field({ label, name, value, onChange, type = 'text', placeholder, error
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="rounded-lg border border-[var(--glass-border)] bg-[var(--input-bg)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-cyan)]/40 transition-colors"
+        className="rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-cyan)]/30 transition-colors"
+        style={{
+          background: 'var(--input-bg)',
+          border: '1px solid rgba(0,102,102,0.25)',
+          color: 'var(--text-primary)',
+        }}
       />
       {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
@@ -188,9 +193,9 @@ export function WafRequestModal({ open, onClose }: WafRequestModalProps) {
                   <h3 className="text-sm font-bold text-[var(--accent-cyan)] mb-3 uppercase tracking-wide">Institution</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <Field label="Institution Name *" name="companyName" value={form.companyName} onChange={handleChange}
-                      placeholder="e.g. Ministry of Finance" error={errors.companyName} />
+                      placeholder="Enter your institution name" error={errors.companyName} />
                     <Field label="Contact Person" name="contactPerson" value={form.contactPerson} onChange={handleChange}
-                      placeholder="Full name" />
+                      placeholder="Full name of responsible person" />
                   </div>
                 </section>
 
@@ -203,9 +208,9 @@ export function WafRequestModal({ open, onClose }: WafRequestModalProps) {
                   {form.hasInternalWebsite && (
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 pl-6 border-l-2 border-[var(--accent-cyan)]/30">
                       <Field label="Server OS *" name="internalServerOS" value={form.internalServerOS} onChange={handleChange}
-                        placeholder="e.g. Ubuntu 22.04" error={errors.internalServerOS} />
+                        placeholder="Operating system name and version" error={errors.internalServerOS} />
                       <Field label="OS Version *" name="internalOSVersion" value={form.internalOSVersion} onChange={handleChange}
-                        placeholder="e.g. 22.04" error={errors.internalOSVersion} />
+                        placeholder="Specific version number" error={errors.internalOSVersion} />
                       <div className="sm:col-span-2 flex flex-wrap gap-4">
                         <CheckField label="Apache" name="internalServerApache" checked={form.internalServerApache} onChange={handleChange} />
                         <CheckField label="Nginx" name="internalServerNginx" checked={form.internalServerNginx} onChange={handleChange} />
@@ -225,12 +230,12 @@ export function WafRequestModal({ open, onClose }: WafRequestModalProps) {
                     <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-4 pl-6 border-l-2 border-[var(--accent-cyan)]/30">
                       <div className="sm:col-span-2">
                         <Field label="Public Website URL *" name="publicWebsiteAddress" value={form.publicWebsiteAddress}
-                          onChange={handleChange} placeholder="https://example.gov.et" error={errors.publicWebsiteAddress} />
+                          onChange={handleChange} placeholder="Full URL of your public website" error={errors.publicWebsiteAddress} />
                       </div>
                       <Field label="Server OS *" name="publicServerOS" value={form.publicServerOS} onChange={handleChange}
-                        placeholder="e.g. CentOS 7" error={errors.publicServerOS} />
+                        placeholder="Operating system name" error={errors.publicServerOS} />
                       <Field label="OS Version" name="publicOSVersion" value={form.publicOSVersion} onChange={handleChange}
-                        placeholder="e.g. 7.9" />
+                        placeholder="Version number" />
                       <div className="sm:col-span-2 flex flex-wrap gap-4">
                         <CheckField label="Apache" name="publicServerApache" checked={form.publicServerApache} onChange={handleChange} />
                         <CheckField label="Nginx" name="publicServerNginx" checked={form.publicServerNginx} onChange={handleChange} />
@@ -247,9 +252,9 @@ export function WafRequestModal({ open, onClose }: WafRequestModalProps) {
                     <Field label="Contact Name *" name="contactName" value={form.contactName} onChange={handleChange}
                       placeholder="Full name" error={errors.contactName} />
                     <Field label="Phone *" name="contactPhone" value={form.contactPhone} onChange={handleChange}
-                      placeholder="+251..." error={errors.contactPhone} />
+                      placeholder="Include country code" error={errors.contactPhone} />
                     <Field label="Email *" name="contactEmail" value={form.contactEmail} onChange={handleChange}
-                      type="email" placeholder="name@institution.gov.et" error={errors.contactEmail} />
+                      type="email" placeholder="Official work email" error={errors.contactEmail} />
                   </div>
                 </section>
 
@@ -257,10 +262,10 @@ export function WafRequestModal({ open, onClose }: WafRequestModalProps) {
                 <section>
                   <h3 className="text-sm font-bold text-[var(--accent-cyan)] mb-3 uppercase tracking-wide">Additional (Optional)</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <Field label="Website" name="website" value={form.website} onChange={handleChange} placeholder="https://" />
-                    <Field label="Office Number" name="officeNo" value={form.officeNo} onChange={handleChange} placeholder="e.g. +251 11 ..." />
-                    <Field label="Job Title" name="jobTitle" value={form.jobTitle} onChange={handleChange} placeholder="e.g. IT Manager" />
-                    <Field label="Department" name="department" value={form.department} onChange={handleChange} placeholder="e.g. IT Department" />
+                    <Field label="Website" name="website" value={form.website} onChange={handleChange} placeholder="Your institution website" />
+                    <Field label="Office Number" name="officeNo" value={form.officeNo} onChange={handleChange} placeholder="Direct office phone line" />
+                    <Field label="Job Title" name="jobTitle" value={form.jobTitle} onChange={handleChange} placeholder="Your current position" />
+                    <Field label="Department" name="department" value={form.department} onChange={handleChange} placeholder="Your department name" />
                   </div>
                 </section>
               </div>

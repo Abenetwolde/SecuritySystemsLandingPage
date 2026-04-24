@@ -113,31 +113,31 @@ function CommonFields({
   return (
     <>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <F label="Company Name *" error={e.companyName}>
-          <Input value={f.companyName} onChange={ev => set('companyName', ev.target.value)} placeholder="INSA" className="input-surface mt-1" />
+        <F label="Institution / Company Name *" error={e.companyName}>
+          <Input value={f.companyName} onChange={ev => set('companyName', ev.target.value)} placeholder="Enter your institution or company name" className="input-surface mt-1" />
         </F>
         <F label="Contact Person *" error={e.contactPerson}>
-          <Input value={f.contactPerson} onChange={ev => set('contactPerson', ev.target.value)} placeholder="Full name" className="input-surface mt-1" />
+          <Input value={f.contactPerson} onChange={ev => set('contactPerson', ev.target.value)} placeholder="Full name of the responsible person" className="input-surface mt-1" />
         </F>
-        <F label="Email *" error={e.contactEmail}>
-          <Input type="email" value={f.contactEmail} onChange={ev => set('contactEmail', ev.target.value)} placeholder="you@example.com" className="input-surface mt-1" />
+        <F label="Work Email *" error={e.contactEmail}>
+          <Input type="email" value={f.contactEmail} onChange={ev => set('contactEmail', ev.target.value)} placeholder="Official work email address" className="input-surface mt-1" />
         </F>
-        <F label="Phone *" error={e.contactPhone}>
-          <Input value={f.contactPhone} onChange={ev => set('contactPhone', ev.target.value)} placeholder="+251911000000" className="input-surface mt-1" />
+        <F label="Phone Number *" error={e.contactPhone}>
+          <Input value={f.contactPhone} onChange={ev => set('contactPhone', ev.target.value)} placeholder="Include country code, e.g. +251911..." className="input-surface mt-1" />
         </F>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <F label="Website">
-          <Input value={f.website} onChange={ev => set('website', ev.target.value)} placeholder="https://..." className="input-surface mt-1" />
+          <Input value={f.website} onChange={ev => set('website', ev.target.value)} placeholder="Your institution website" className="input-surface mt-1" />
         </F>
         <F label="Office No.">
-          <Input value={f.officeNo} onChange={ev => set('officeNo', ev.target.value)} className="input-surface mt-1" />
+          <Input value={f.officeNo} onChange={ev => set('officeNo', ev.target.value)} placeholder="Direct office line" className="input-surface mt-1" />
         </F>
         <F label="Job Title">
-          <Input value={f.jobTitle} onChange={ev => set('jobTitle', ev.target.value)} className="input-surface mt-1" />
+          <Input value={f.jobTitle} onChange={ev => set('jobTitle', ev.target.value)} placeholder="Your current position" className="input-surface mt-1" />
         </F>
         <F label="Department">
-          <Input value={f.department} onChange={ev => set('department', ev.target.value)} className="input-surface mt-1" />
+          <Input value={f.department} onChange={ev => set('department', ev.target.value)} placeholder="e.g. IT, Security" className="input-surface mt-1" />
         </F>
       </div>
     </>
@@ -184,19 +184,19 @@ function AVForm({ product }: { product: ProductSlug }) {
         <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">Operating Systems</p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <F label="Total Computers *" error={errors.totalComputers}>
-            <Input type="number" value={os.totalComputers} onChange={ev => setO('totalComputers', ev.target.value)} placeholder="100" className="input-surface mt-1" />
+            <Input type="number" value={os.totalComputers} onChange={ev => setO('totalComputers', ev.target.value)} placeholder="Total number of computers" className="input-surface mt-1" />
           </F>
-          <F label="Windows *" error={errors.windowOperatingSystems}>
-            <Input type="number" value={os.windowOperatingSystems} onChange={ev => setO('windowOperatingSystems', ev.target.value)} placeholder="80" className="input-surface mt-1" />
+          <F label="Windows Machines *" error={errors.windowOperatingSystems}>
+            <Input type="number" value={os.windowOperatingSystems} onChange={ev => setO('windowOperatingSystems', ev.target.value)} placeholder="Number running Windows" className="input-surface mt-1" />
           </F>
-          <F label="Linux *" error={errors.linuxOperatingSystems}>
-            <Input type="number" value={os.linuxOperatingSystems} onChange={ev => setO('linuxOperatingSystems', ev.target.value)} placeholder="20" className="input-surface mt-1" />
+          <F label="Linux Machines *" error={errors.linuxOperatingSystems}>
+            <Input type="number" value={os.linuxOperatingSystems} onChange={ev => setO('linuxOperatingSystems', ev.target.value)} placeholder="Number running Linux" className="input-surface mt-1" />
           </F>
-          <F label="32-Bit *" error={errors.Bit32}>
-            <Input type="number" value={os.Bit32} onChange={ev => setO('Bit32', ev.target.value)} placeholder="10" className="input-surface mt-1" />
+          <F label="32-Bit Systems *" error={errors.Bit32}>
+            <Input type="number" value={os.Bit32} onChange={ev => setO('Bit32', ev.target.value)} placeholder="Number of 32-bit systems" className="input-surface mt-1" />
           </F>
-          <F label="64-Bit *" error={errors.Bit64}>
-            <Input type="number" value={os.Bit64} onChange={ev => setO('Bit64', ev.target.value)} placeholder="90" className="input-surface mt-1" />
+          <F label="64-Bit Systems *" error={errors.Bit64}>
+            <Input type="number" value={os.Bit64} onChange={ev => setO('Bit64', ev.target.value)} placeholder="Number of 64-bit systems" className="input-surface mt-1" />
           </F>
         </div>
       </div>
@@ -244,25 +244,25 @@ function VPNForm() {
         <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">Operating Systems</p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <F label="Total Computers *" error={errors.totalComputers}>
-            <Input type="number" value={os.totalComputers} onChange={ev => setO('totalComputers', ev.target.value)} placeholder="100" className="input-surface mt-1" />
+            <Input type="number" value={os.totalComputers} onChange={ev => setO('totalComputers', ev.target.value)} placeholder="Total number of devices" className="input-surface mt-1" />
           </F>
-          <F label="Windows *" error={errors.windowOperatingSystems}>
-            <Input type="number" value={os.windowOperatingSystems} onChange={ev => setO('windowOperatingSystems', ev.target.value)} placeholder="80" className="input-surface mt-1" />
+          <F label="Windows Machines *" error={errors.windowOperatingSystems}>
+            <Input type="number" value={os.windowOperatingSystems} onChange={ev => setO('windowOperatingSystems', ev.target.value)} placeholder="Number running Windows" className="input-surface mt-1" />
           </F>
-          <F label="Linux *" error={errors.linuxOperatingSystems}>
-            <Input type="number" value={os.linuxOperatingSystems} onChange={ev => setO('linuxOperatingSystems', ev.target.value)} placeholder="20" className="input-surface mt-1" />
+          <F label="Linux Machines *" error={errors.linuxOperatingSystems}>
+            <Input type="number" value={os.linuxOperatingSystems} onChange={ev => setO('linuxOperatingSystems', ev.target.value)} placeholder="Number running Linux" className="input-surface mt-1" />
           </F>
-          <F label="Android">
-            <Input type="number" value={os.androidOperatingSystems} onChange={ev => setO('androidOperatingSystems', ev.target.value)} placeholder="0" className="input-surface mt-1" />
+          <F label="Android Devices">
+            <Input type="number" value={os.androidOperatingSystems} onChange={ev => setO('androidOperatingSystems', ev.target.value)} placeholder="Number of Android devices" className="input-surface mt-1" />
           </F>
-          <F label="iOS">
-            <Input type="number" value={os.iosOperatingSystems} onChange={ev => setO('iosOperatingSystems', ev.target.value)} placeholder="0" className="input-surface mt-1" />
+          <F label="iOS Devices">
+            <Input type="number" value={os.iosOperatingSystems} onChange={ev => setO('iosOperatingSystems', ev.target.value)} placeholder="Number of iOS devices" className="input-surface mt-1" />
           </F>
-          <F label="32-Bit *" error={errors.Bit32}>
-            <Input type="number" value={os.Bit32} onChange={ev => setO('Bit32', ev.target.value)} placeholder="10" className="input-surface mt-1" />
+          <F label="32-Bit Systems *" error={errors.Bit32}>
+            <Input type="number" value={os.Bit32} onChange={ev => setO('Bit32', ev.target.value)} placeholder="Number of 32-bit systems" className="input-surface mt-1" />
           </F>
-          <F label="64-Bit *" error={errors.Bit64}>
-            <Input type="number" value={os.Bit64} onChange={ev => setO('Bit64', ev.target.value)} placeholder="90" className="input-surface mt-1" />
+          <F label="64-Bit Systems *" error={errors.Bit64}>
+            <Input type="number" value={os.Bit64} onChange={ev => setO('Bit64', ev.target.value)} placeholder="Number of 64-bit systems" className="input-surface mt-1" />
           </F>
         </div>
       </div>
@@ -309,23 +309,23 @@ function NisirForm() {
       <div>
         <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">System Details</p>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          <F label="Total Agentless *" error={errors.totalNumberOfAgentless}>
-            <Input type="number" value={os.totalNumberOfAgentless} onChange={ev => setO('totalNumberOfAgentless', ev.target.value)} placeholder="50" className="input-surface mt-1" />
+          <F label="Total Agentless Endpoints *" error={errors.totalNumberOfAgentless}>
+            <Input type="number" value={os.totalNumberOfAgentless} onChange={ev => setO('totalNumberOfAgentless', ev.target.value)} placeholder="Total endpoints to monitor" className="input-surface mt-1" />
           </F>
-          <F label="Windows *" error={errors.windowOperatingSystems}>
-            <Input type="number" value={os.windowOperatingSystems} onChange={ev => setO('windowOperatingSystems', ev.target.value)} placeholder="30" className="input-surface mt-1" />
+          <F label="Windows Endpoints *" error={errors.windowOperatingSystems}>
+            <Input type="number" value={os.windowOperatingSystems} onChange={ev => setO('windowOperatingSystems', ev.target.value)} placeholder="Number running Windows" className="input-surface mt-1" />
           </F>
-          <F label="Mac *" error={errors.Mac}>
-            <Input type="number" value={os.Mac} onChange={ev => setO('Mac', ev.target.value)} placeholder="10" className="input-surface mt-1" />
+          <F label="Mac Endpoints *" error={errors.Mac}>
+            <Input type="number" value={os.Mac} onChange={ev => setO('Mac', ev.target.value)} placeholder="Number running macOS" className="input-surface mt-1" />
           </F>
-          <F label="Linux *" error={errors.Linux}>
-            <Input type="number" value={os.Linux} onChange={ev => setO('Linux', ev.target.value)} placeholder="10" className="input-surface mt-1" />
+          <F label="Linux Endpoints *" error={errors.Linux}>
+            <Input type="number" value={os.Linux} onChange={ev => setO('Linux', ev.target.value)} placeholder="Number running Linux" className="input-surface mt-1" />
           </F>
-          <F label="32-Bit *" error={errors.Bit32}>
-            <Input type="number" value={os.Bit32} onChange={ev => setO('Bit32', ev.target.value)} placeholder="10" className="input-surface mt-1" />
+          <F label="32-Bit Systems *" error={errors.Bit32}>
+            <Input type="number" value={os.Bit32} onChange={ev => setO('Bit32', ev.target.value)} placeholder="Number of 32-bit systems" className="input-surface mt-1" />
           </F>
-          <F label="64-Bit *" error={errors.Bit64}>
-            <Input type="number" value={os.Bit64} onChange={ev => setO('Bit64', ev.target.value)} placeholder="40" className="input-surface mt-1" />
+          <F label="64-Bit Systems *" error={errors.Bit64}>
+            <Input type="number" value={os.Bit64} onChange={ev => setO('Bit64', ev.target.value)} placeholder="Number of 64-bit systems" className="input-surface mt-1" />
           </F>
         </div>
       </div>
@@ -380,16 +380,16 @@ function ABISForm() {
         <p className="text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-3">Biometric Details</p>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <F label="Type of Service *" error={errors.typeOfService}>
-            <Input value={bio.typeOfService} onChange={ev => setB('typeOfService', ev.target.value)} className="input-surface mt-1" />
+            <Input value={bio.typeOfService} onChange={ev => setB('typeOfService', ev.target.value)} placeholder="e.g. Identification, Verification" className="input-surface mt-1" />
           </F>
           <F label="Purpose of Request *" error={errors.purposeOfRequest}>
-            <Input value={bio.purposeOfRequest} onChange={ev => setB('purposeOfRequest', ev.target.value)} className="input-surface mt-1" />
+            <Input value={bio.purposeOfRequest} onChange={ev => setB('purposeOfRequest', ev.target.value)} placeholder="Describe the use case" className="input-surface mt-1" />
           </F>
           <F label="Number of Users *" error={errors.numberOfUsers}>
-            <Input type="number" value={bio.numberOfUsers} onChange={ev => setB('numberOfUsers', ev.target.value)} className="input-surface mt-1" />
+            <Input type="number" value={bio.numberOfUsers} onChange={ev => setB('numberOfUsers', ev.target.value)} placeholder="Expected number of users" className="input-surface mt-1" />
           </F>
           <F label="Service Duration *" error={errors.serviceDuration}>
-            <Input value={bio.serviceDuration} onChange={ev => setB('serviceDuration', ev.target.value)} placeholder="2024-01 to 2025-01" className="input-surface mt-1" />
+            <Input value={bio.serviceDuration} onChange={ev => setB('serviceDuration', ev.target.value)} placeholder="e.g. 1 year, 6 months" className="input-surface mt-1" />
           </F>
           <F label="Biometric Modality *" error={errors.biometricModality}>
             <Select onValueChange={v => setB('biometricModality', v)}>
@@ -400,7 +400,7 @@ function ABISForm() {
             </Select>
           </F>
           <F label="Integration Requirements *" error={errors.integrationRequirements}>
-            <Input value={bio.integrationRequirements} onChange={ev => setB('integrationRequirements', ev.target.value)} className="input-surface mt-1" />
+            <Input value={bio.integrationRequirements} onChange={ev => setB('integrationRequirements', ev.target.value)} placeholder="Describe existing systems to integrate with" className="input-surface mt-1" />
           </F>
           <div className="sm:col-span-2">
             <F label="Additional Notes">

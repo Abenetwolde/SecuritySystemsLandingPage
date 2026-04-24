@@ -1,30 +1,28 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, Eye, EyeOff, X, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 
-interface PasswordModalProps {
+const DOWNLOAD_API = 'https://securitysystems.insa.gov.et/api/download'
+
+export interface PasswordModalProps {
   open: boolean
   onClose: () => void
+  /** Display name shown in the modal header */
   fileName: string
+  /** Backend file identifier: 'av-exe' | 'vpn-exe' | 'vpn-apk' */
+  fileId: string
 }
 
-const CORRECT_PASSWORD = 'gasha123'
-
-export function verifyPassword(input: string): boolean {
-  return input === CORRECT_PASSWORD
-}
-
-export function PasswordModal({ open, onClose, fileName }: PasswordModalProps) {
+export function PasswordModal({ open, onClose, fileName, fileId }: PasswordModalProps) {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
   const [shake, setShake] = useState(false)
-  const linkRef = useRef<HTMLAnchorElement>(null)
 
   const handleClose = () => {
     setPassword('')
@@ -34,29 +32,50 @@ export function PasswordModal({ open, onClose, fileName }: PasswordModalProps) {
   }
 
   const handleSubmit = async () => {
+    if (!password) return
     setIsVerifying(true)
     setError('')
 
-    // Simulate scanning animation duration
-    await new Promise((r) => setTimeout(r, 1200))
+    try {
+      const res = await fetch(DOWNLOAD_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password, file: fileId }),
+      })
 
-    if (verifyPassword(password)) {
-      setIsVerifying(false)
+      if (res.status === 401) {
+        setError('Incorrect password')
+        setShake(true)
+        setTimeout(() => setShake(false), 500)
+        toast.error('Wrong password, please try again')
+        return
+      }
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setError(data.message ?? 'Download failed')
+        toast.error(data.message ?? 'Download failed')
+        return
+      }
+
+      // Stream blob and trigger browser download
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = fileName
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+
       toast.success('Download started')
-      // Trigger download
-      const link = document.createElement('a')
-      link.href = `/${fileName}`
-      link.setAttribute('download', fileName)
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
       handleClose()
-    } else {
+    } catch {
+      setError('Network error. Please try again.')
+      toast.error('Network error. Please try again.')
+    } finally {
       setIsVerifying(false)
-      setError('Incorrect password')
-      setShake(true)
-      setTimeout(() => setShake(false), 500)
-      toast.error('Wrong password, please try again')
     }
   }
 
@@ -69,16 +88,12 @@ export function PasswordModal({ open, onClose, fileName }: PasswordModalProps) {
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             onClick={handleClose}
-            className="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm"
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
           />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -91,118 +106,114 @@ export function PasswordModal({ open, onClose, fileName }: PasswordModalProps) {
               className="relative w-full max-w-md overflow-hidden rounded-2xl"
               style={{
                 background: 'var(--modal-bg)',
-                backdropFilter: 'blur(20px)',
-                WebkitBackdropFilter: 'blur(20px)',
                 border: '1px solid var(--glass-border)',
-                boxShadow: '0 0 60px rgba(0,102,102,0.12), 0 25px 50px rgba(0,0,0,0.15)',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
               }}
             >
               <div className="p-6 sm:p-8">
-              {/* Scanning line animation */}
-              {isVerifying && (
-                <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
-                  <motion.div
-                    initial={{ top: '0%' }}
-                    animate={{ top: '100%' }}
-                    transition={{ duration: 1.2, ease: 'linear' }}
-                    className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-cyan to-transparent opacity-80"
-                    style={{ position: 'absolute' }}
+                {/* Scanning line */}
+                {isVerifying && (
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
+                    <motion.div
+                      initial={{ top: '0%' }}
+                      animate={{ top: '100%' }}
+                      transition={{ duration: 1.2, ease: 'linear' }}
+                      className="absolute left-0 right-0 h-0.5"
+                      style={{
+                        background: 'linear-gradient(90deg, transparent, var(--accent-cyan), transparent)',
+                        position: 'absolute',
+                      }}
+                    />
+                  </div>
+                )}
+
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full"
+                      style={{ background: 'rgba(0,102,102,0.1)', border: '1px solid rgba(0,102,102,0.3)' }}>
+                      <Lock className="h-5 w-5" style={{ color: 'var(--accent-cyan)' }} />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-[var(--text-primary)]">Secure Download</h2>
+                      <p className="text-xs text-[var(--text-muted)]">{fileName}</p>
+                    </div>
+                  </div>
+                  <button onClick={handleClose} className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+
+                <p className="text-sm text-[var(--text-muted)] mb-4">
+                  Enter the download password to access this file.
+                </p>
+
+                {/* Password input */}
+                <motion.div
+                  animate={shake ? { x: [0, -8, 8, -8, 8, 0] } : {}}
+                  transition={{ duration: 0.4 }}
+                  className="relative mb-2"
+                >
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Enter password"
+                    disabled={isVerifying}
+                    className="w-full rounded-lg px-4 py-3 pr-12 font-mono text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 disabled:opacity-50 transition-colors"
+                    style={{
+                      background: 'var(--input-bg)',
+                      border: '1px solid rgba(0,102,102,0.25)',
+                    }}
                   />
-                  <div className="absolute inset-0 bg-cyan/5" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </motion.div>
+
+                {error && (
+                  <motion.p
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-4 text-xs text-red-500"
+                    role="alert"
+                  >
+                    {error}
+                  </motion.p>
+                )}
+
+                <div className="flex gap-3 mt-6">
+                  <Button variant="outline" onClick={handleClose} className="flex-1" disabled={isVerifying}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!password || isVerifying}
+                    className="flex-1 gap-2"
+                    style={{ background: 'linear-gradient(135deg, #006666, #008080)', color: '#fff' }}
+                  >
+                    {isVerifying ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                          className="h-4 w-4 rounded-full border-2 border-white border-t-transparent"
+                        />
+                        Verifying...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="h-4 w-4" />
+                        Download
+                      </>
+                    )}
+                  </Button>
                 </div>
-              )}
-
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-cyan)]/10 border border-[var(--accent-cyan)]/30">
-                    <Lock className="h-5 w-5 text-[var(--accent-cyan)]" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-[var(--text-primary)]">Secure Download</h2>
-                    <p className="text-xs text-[var(--text-muted)]">{fileName}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={handleClose}
-                  className="text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
-                  aria-label="Close"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <p className="text-sm text-[var(--text-muted)] mb-4">
-                Enter the download password to access this file.
-              </p>
-
-              {/* Password input */}
-              <motion.div
-                animate={shake ? { x: [0, -8, 8, -8, 8, 0] } : {}}
-                transition={{ duration: 0.4 }}
-                className="relative mb-2"
-              >
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Enter password"
-                  disabled={isVerifying}
-                  aria-label="Download password"
-                  aria-describedby={error ? 'password-error' : undefined}
-                  className="w-full rounded-lg border border-[var(--glass-border)] bg-[var(--glass-bg)] px-4 py-3 pr-12 font-mono text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-cyan/50 focus:border-cyan disabled:opacity-50 transition-colors"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-cyan transition-colors"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </motion.div>
-
-              {/* Error */}
-              {error && (
-                <motion.p
-                  id="password-error"
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="mb-4 text-xs text-red-400"
-                  role="alert"
-                >
-                  {error}
-                </motion.p>
-              )}
-
-              {/* Actions */}
-              <div className="flex gap-3 mt-6">
-                <Button variant="outline" onClick={handleClose} className="flex-1" disabled={isVerifying}>
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!password || isVerifying}
-                  className="flex-1 gap-2"
-                >
-                  {isVerifying ? (
-                    <>
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                        className="h-4 w-4 rounded-full border-2 border-obsidian border-t-transparent"
-                      />
-                      Verifying...
-                    </>
-                  ) : (
-                    <>
-                      <Download className="h-4 w-4" />
-                      Download
-                    </>
-                  )}
-                </Button>
-              </div>
               </div>
             </div>
           </motion.div>

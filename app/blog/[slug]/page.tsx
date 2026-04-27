@@ -135,7 +135,7 @@ Enyuma IAM supports LDAP, Active Directory, SAML 2.0, and OAuth 2.0, making it c
 ]
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export function generateStaticParams() {
@@ -143,7 +143,8 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = POSTS.find((p) => p.slug === params.slug)
+  const { slug } = await params
+  const post = POSTS.find((p) => p.slug === slug)
   if (!post) return { title: 'Post Not Found' }
   return {
     title: `${post.title} — INSA Security Blog`,
@@ -151,8 +152,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function BlogPostPage({ params }: Props) {
-  const post = POSTS.find((p) => p.slug === params.slug)
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params
+  const post = POSTS.find((p) => p.slug === slug)
   if (!post) notFound()
 
   const Icon = post.icon

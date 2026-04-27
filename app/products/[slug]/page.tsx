@@ -190,7 +190,7 @@ const PRODUCT_DETAILS: Record<string, {
 }
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export function generateStaticParams() {
@@ -198,7 +198,8 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = getProductBySlug(params.slug)
+  const { slug } = await params
+  const product = getProductBySlug(slug)
   if (!product) return { title: 'Product Not Found' }
   return {
     title: `${product.name} — Security Systems`,
@@ -206,8 +207,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function ProductPage({ params }: Props) {
-  const product = getProductBySlug(params.slug)
+export default async function ProductPage({ params }: Props) {
+  const { slug } = await params
+  const product = getProductBySlug(slug)
   if (!product) notFound()
 
   const details = PRODUCT_DETAILS[product.slug]

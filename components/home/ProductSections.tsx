@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion, useInView } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
-import { PRODUCTS, type Product } from '@/lib/products'
+import type { Product } from '@/lib/products'
 
 // ── Platform icons ───────────────────────────────────────────────
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
@@ -29,22 +29,15 @@ const PLATFORM_ICONS: Record<string, React.ReactNode> = {
   ),
 }
 
-const PRODUCT_PLATFORMS: Record<string, string[]> = {
-  'gasha-av':        ['windows', 'linux'],
-  'gasha-waf':       ['windows', 'linux'],
-  'gasha-vpn':       ['windows', 'linux', 'android', 'ios'],
-  'nisir':           ['windows', 'linux'],
-  'enyuma-iam':      ['windows', 'linux'],
-  'abis':            ['windows', 'linux'],
-  'code-protection': ['windows', 'linux'],
-}
-
 // Always use dark text on these specific light product colors
 const DARK_TEXT_SLUGS = new Set(['gasha-av', 'gasha-waf'])
 
 // ── Description card ────────────────────────────────────────────
 function ProductDescCard({ product }: { product: Product }) {
-  const platforms = PRODUCT_PLATFORMS[product.slug] ?? ['windows', 'linux']
+  // Use platforms from DB; fall back to windows+linux if not set
+  const platforms = (product.platforms && product.platforms.length > 0)
+    ? product.platforms
+    : ['windows', 'linux']
   // AV (#1da09c) and WAF (#3ed8ec) are light — need dark text on their buttons
   const btnTextColor = DARK_TEXT_SLUGS.has(product.slug) ? '#0a0f1e' : '#ffffff'
 
@@ -344,10 +337,10 @@ function ProductSection({ product, index }: { product: Product; index: number })
   )
 }
 
-export function ProductSections() {
+export function ProductSections({ products }: { products: Product[] }) {
   return (
     <div>
-      {PRODUCTS.map((product, index) => (
+      {products.map((product, index) => (
         <ProductSection key={product.slug} product={product} index={index} />
       ))}
     </div>

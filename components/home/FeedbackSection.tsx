@@ -8,10 +8,12 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { submitFeedback } from '@/app/actions/submit-feedback'
 import type { SiteSettings } from '@/lib/api'
+import { useAnalytics } from '@/lib/useAnalytics'
 
 export function FeedbackSection({ settings }: { settings: SiteSettings }) {
   const [feedback, setFeedback] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const { track } = useAnalytics()
 
   const title = settings.feedbackTitle || 'We would like to hear from You!'
   const subtext = settings.feedbackSubtext || 'Please give us your feedback on our products and services'
@@ -26,6 +28,7 @@ export function FeedbackSection({ settings }: { settings: SiteSettings }) {
       const result = await submitFeedback({ feedback })
       if (result.success) {
         toast.success(result.message)
+        track('feedback_submit')
         setFeedback('')
       } else {
         toast.error(result.error)

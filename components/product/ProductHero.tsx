@@ -9,6 +9,7 @@ import { RequestFormModal } from '@/components/shared/RequestFormModal'
 import { WafRequestModal } from '@/components/shared/WafRequestModal'
 import { PasswordModal } from '@/components/shared/PasswordModal'
 import type { Product } from '@/lib/products'
+import { useAnalytics } from '@/lib/useAnalytics'
 
 interface ProductHeroProps {
   product: Product
@@ -18,6 +19,7 @@ export function ProductHero({ product }: ProductHeroProps) {
   const [requestOpen, setRequestOpen] = useState(false)
   const [wafOpen, setWafOpen] = useState(false)
   const [passwordOpen, setPasswordOpen] = useState(false)
+  const { track } = useAnalytics()
 
   const isWaf = product.slug === 'gasha-waf'
 
@@ -71,7 +73,10 @@ export function ProductHero({ product }: ProductHeroProps) {
           className="flex flex-wrap items-center justify-center gap-4"
         >
           <Button
-            onClick={() => isWaf ? setWafOpen(true) : setRequestOpen(true)}
+            onClick={() => {
+              track('send_request_click', { product: product.slug, product_name: product.name })
+              isWaf ? setWafOpen(true) : setRequestOpen(true)
+            }}
             size="lg"
             className="gap-2"
             style={{ background: product.color, color: '#fff', boxShadow: `0 4px 20px ${product.color}50` }}
@@ -85,7 +90,10 @@ export function ProductHero({ product }: ProductHeroProps) {
             <Button
               variant="outline"
               size="lg"
-              onClick={() => setPasswordOpen(true)}
+              onClick={() => {
+                track('download_click', { product: product.slug, product_name: product.name })
+                setPasswordOpen(true)
+              }}
               className="gap-2"
               style={{ borderColor: `${product.color}50`, color: product.color }}
               aria-label={`Download ${product.name}`}

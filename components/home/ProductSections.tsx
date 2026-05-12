@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { motion, useInView } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import type { Product } from '@/lib/products'
+import { useAnalytics } from '@/lib/useAnalytics'
 
 // ── Platform icons ───────────────────────────────────────────────
 const PLATFORM_ICONS: Record<string, React.ReactNode> = {
@@ -40,6 +41,7 @@ function ProductDescCard({ product }: { product: Product }) {
     : ['windows', 'linux']
   // AV (#1da09c) and WAF (#3ed8ec) are light — need dark text on their buttons
   const btnTextColor = DARK_TEXT_SLUGS.has(product.slug) ? '#0a0f1e' : '#ffffff'
+  const { track } = useAnalytics()
 
   return (
     <div className="flex flex-col items-center text-center max-w-sm mx-auto lg:mx-0 lg:items-start lg:text-left">
@@ -88,6 +90,7 @@ function ProductDescCard({ product }: { product: Product }) {
           boxShadow: `0 4px 20px ${product.color}55`,
           border: `1.5px solid ${product.color}`,
         }}
+        onClick={() => track('product_view_more_click', { product: product.slug, product_name: product.name })}
       >
         View more features
         <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />

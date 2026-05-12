@@ -6,6 +6,7 @@ import { Footer } from '@/components/layout/Footer'
 import { PortalShell } from '@/components/shared/PortalShell'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import './globals.css'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   title: 'Security Systems — INSA',
@@ -18,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   return (
     <html lang="en" suppressHydrationWarning>
+
       <body>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <PortalShell>{children}</PortalShell>
@@ -25,6 +27,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </ThemeProvider>
         {gaId && <GoogleAnalytics gaId={gaId} />}
       </body>
+      <Script
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id="d7b20462-d404-459e-9f01-cd2dfce111b5"
+      />
     </html>
   )
 }

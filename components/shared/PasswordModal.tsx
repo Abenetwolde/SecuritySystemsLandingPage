@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Lock, Eye, EyeOff, X, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { useAnalytics } from '@/lib/useAnalytics'
 
 const DOWNLOAD_API = 'https://securitysystems.insa.gov.et/api/download'
 
@@ -23,6 +24,7 @@ export function PasswordModal({ open, onClose, fileName, fileId }: PasswordModal
   const [error, setError] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
   const [shake, setShake] = useState(false)
+  const { track } = useAnalytics()
 
   const handleClose = () => {
     setPassword('')
@@ -35,6 +37,7 @@ export function PasswordModal({ open, onClose, fileName, fileId }: PasswordModal
     if (!password) return
     setIsVerifying(true)
     setError('')
+    track('download_attempt', { file: fileId })
 
     try {
       const res = await fetch(DOWNLOAD_API, {
@@ -48,6 +51,7 @@ export function PasswordModal({ open, onClose, fileName, fileId }: PasswordModal
         setShake(true)
         setTimeout(() => setShake(false), 500)
         toast.error('Wrong password, please try again')
+        track('download_failed', { file: fileId, reason: 'wrong_password' })
         return
       }
 
@@ -55,6 +59,7 @@ export function PasswordModal({ open, onClose, fileName, fileId }: PasswordModal
         const data = await res.json().catch(() => ({}))
         setError(data.message ?? 'Download failed')
         toast.error(data.message ?? 'Download failed')
+        track('download_failed', { file: fileId, reason: 'error' })
         return
       }
 
@@ -69,11 +74,13 @@ export function PasswordModal({ open, onClose, fileName, fileId }: PasswordModal
       a.remove()
       URL.revokeObjectURL(url)
 
+      track('download_success', { file: fileId, fileName })
       toast.success('Download started')
       handleClose()
     } catch {
       setError('Network error. Please try again.')
       toast.error('Network error. Please try again.')
+      track('download_failed', { file: fileId, reason: 'error' })
     } finally {
       setIsVerifying(false)
     }

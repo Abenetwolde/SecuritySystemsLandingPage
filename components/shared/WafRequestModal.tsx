@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import { useAnalytics } from '@/lib/useAnalytics'
 
 interface WafRequestModalProps {
   open: boolean
@@ -92,6 +93,7 @@ export function WafRequestModal({ open, onClose }: WafRequestModalProps) {
   const [form, setForm] = useState<FormData>(INITIAL)
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
   const [submitting, setSubmitting] = useState(false)
+  const { track } = useAnalytics()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -140,6 +142,7 @@ export function WafRequestModal({ open, onClose }: WafRequestModalProps) {
         }),
       ])
       toast.success('WAF request submitted successfully!')
+      track('request_form_submit', { product: 'gasha-waf' })
       setForm(INITIAL)
       onClose()
     } catch {

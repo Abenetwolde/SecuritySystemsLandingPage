@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import type { SiteSettings, BlogPost } from '@/lib/api'
 import { resolveImageUrl } from '@/lib/api'
+import { useAnalytics } from '@/lib/useAnalytics'
 
 const FALLBACK_POSTS: BlogPost[] = [
   {
@@ -36,6 +37,7 @@ export function BlogSection({ posts, settings }: { posts: BlogPost[]; settings: 
   const label = settings.blogSectionLabel || 'Security Insights'
   const title = settings.blogSectionTitle || 'From the INSA Security Blog'
   const subtext = settings.blogSectionSubtext || "Expert analysis, threat intelligence, and best practices from Ethiopia's national cybersecurity authority."
+  const { track } = useAnalytics()
 
   return (
     <section className="py-20 px-4 sm:px-6" style={{ background: 'var(--bg-secondary)' }} aria-labelledby="blog-heading">
@@ -82,7 +84,8 @@ export function BlogSection({ posts, settings }: { posts: BlogPost[]; settings: 
                   <span>{post.date} · {post.readTime}</span>
                   <Link href={`/blog/${post.slug}`}
                     className="flex items-center gap-1 font-semibold transition-colors hover:text-[var(--accent-cyan)]"
-                    style={{ color: post.color }}>
+                    style={{ color: post.color }}
+                    onClick={() => track('blog_read_more_click', { slug: post.slug, title: post.title })}>
                     Read more <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </div>

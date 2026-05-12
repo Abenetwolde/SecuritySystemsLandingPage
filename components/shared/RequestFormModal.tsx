@@ -13,6 +13,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 import { PRODUCTS, type ProductSlug } from '@/lib/products'
+import { useAnalytics } from '@/lib/useAnalytics'
 
 // ── API submission ───────────────────────────────────────────────
 const DEFAULTS = {
@@ -465,10 +466,14 @@ export function RequestFormModal({ open, onClose, defaultProduct }: RequestFormM
   const product = defaultProduct ?? 'gasha-av'
   const productMeta = PRODUCTS.find(p => p.slug === product)
   const { fields, submit, loading } = useProductForm(product)
+  const { track } = useAnalytics()
 
   const handleSubmit = async () => {
     const ok = await submit()
-    if (ok) onClose()
+    if (ok) {
+      track('request_form_submit', { product })
+      onClose()
+    }
   }
 
   return (
